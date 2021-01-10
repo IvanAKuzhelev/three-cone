@@ -7,9 +7,26 @@ const Form = () => {
   const [height, setHeight] = useState(200);
   const [width, setWidth] = useState(100);
   const [length, setLength] = useState(150);
-  //   const [, setDrawValues] = useContext(DrawValuesContext);
-  const getDrawvalues = () => {
-    console.log("yep");
+  const [drawValues, setDrawValues] = useContext(DrawValuesContext);
+  const getDrawvalues = async () => {
+    const clientDimensions = {
+      x: Number(width),
+      y: Number(height),
+      z: Number(length),
+    };
+    const url = "http://localhost:3001/";
+    console.log(JSON.stringify(clientDimensions));
+    const response = await fetch(url, {
+      method: "POST",
+      mode: "cors",
+      cache: "no-cache",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(clientDimensions),
+    });
+    return response.json();
   };
   const handleSubmission = (e) => {
     e.preventDefault();
@@ -17,7 +34,7 @@ const Form = () => {
       alert("Please provide all parameters");
       return;
     }
-    getDrawvalues();
+    getDrawvalues().then((data) => setDrawValues(data));
   };
   return (
     <form onSubmit={handleSubmission}>

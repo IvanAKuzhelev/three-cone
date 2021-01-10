@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from "react";
 import { Global, css } from "@emotion/react";
 import Canvas from "../components/canvas";
 import Form from "../components/Form";
@@ -6,8 +7,9 @@ import DrawValuesContext from "../components/DrawValuesContext";
 import InitialDrawValues from "../components/InitialDrawValues";
 
 export default () => {
+  const values = useState(InitialDrawValues);
   return (
-    <DrawValuesContext.Provider value={InitialDrawValues}>
+    <DrawValuesContext.Provider value={values}>
       <Global
         styles={css`
           *,
