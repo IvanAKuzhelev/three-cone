@@ -1,10 +1,11 @@
-import { css } from "@emotion/react";
 import * as React from "react";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useContext } from "react";
 import * as THREE from "three";
 import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
+import DrawValuesContext from "./DrawValuesContext";
 
 const Canvas = () => {
+  const drawValues = useContext(DrawValuesContext);
   const canvasRef = useRef(null);
   //remake
   useEffect(() => {
@@ -22,30 +23,38 @@ const Canvas = () => {
 
     const scene = new THREE.Scene();
 
+    // const light = new THREE.AmbientLight(0xffffff, 0.5);
+    // const light2 = new THREE.PointLight(0xffffff, 1);
+
+    // scene.add(light);
+    // scene.add(light2);
+
     const controls = new TrackballControls(camera, renderer.domElement);
 
-    // controls.rotateSpeed = 1.0;
-    // controls.zoomSpeed = 1.2;
-    // controls.panSpeed = 0.8;
-
     controls.keys = [65, 83, 68];
-    const geometry = new THREE.CubeGeometry(100, 100, 100);
+    //geometry
+
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute(
+      "position",
+      new THREE.BufferAttribute(new Float32Array(drawValues.vertices), 3)
+    );
+    geometry.setIndex(drawValues.indices);
+    geometry.computeVertexNormals();
+    //const geometry = new THREE.CubeGeometry(100, 100, 100);
     const material = new THREE.MeshBasicMaterial({ color: 0xa9a9a9 });
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(0, 0, 0);
     scene.add(mesh);
-    camera.position.set(0, 20, 100);
-    // controls.update();
+    camera.position.set(0, -200, -200);
 
     function render() {
-      // mesh.rotation.x += 0.01;
-      // mesh.rotation.y += 0.03;
       controls.update();
       renderer.render(scene, camera);
       requestAnimationFrame(render);
     }
     requestAnimationFrame(render);
-  }, []);
+  });
 
   return <canvas ref={canvasRef}></canvas>;
 };

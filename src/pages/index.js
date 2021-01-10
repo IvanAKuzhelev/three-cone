@@ -3,10 +3,11 @@ import { Global, css } from "@emotion/react";
 import Canvas from "../components/canvas";
 import Form from "../components/Form";
 import DrawValuesContext from "../components/DrawValuesContext";
+import InitialDrawValues from "../components/InitialDrawValues";
 
 export default () => {
   return (
-    <DrawValuesContext.Provider>
+    <DrawValuesContext.Provider value={InitialDrawValues}>
       <Global
         styles={css`
           *,
