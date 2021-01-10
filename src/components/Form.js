@@ -14,7 +14,7 @@ const Form = () => {
       y: Number(height),
       z: Number(length),
     };
-    const url = "http://localhost:3001/";
+    const url = "https://ikwdd.online/calc/";
     console.log(JSON.stringify(clientDimensions));
     const response = await fetch(url, {
       method: "POST",
