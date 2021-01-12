@@ -7,6 +7,7 @@ import DrawValuesContext from "./DrawValuesContext";
 const Canvas = () => {
   const [drawValues] = useContext(DrawValuesContext);
   const canvasRef = useRef(null);
+  // let renderer, scene, camera, controls, geom;
   useEffect(() => {
     const aspectRatio = (0.8 * window.innerWidth) / window.innerHeight;
 
@@ -62,14 +63,23 @@ const Canvas = () => {
     scene.add(light);
     camera.add(light3);
     scene.add(camera);
-
+    let current = true;
     function render() {
-      controls.update();
-      renderer.render(scene, camera);
-      requestAnimationFrame(render);
+      if (current) {
+        controls.update();
+        renderer.render(scene, camera);
+        requestAnimationFrame(render);
+      }
+      return;
     }
+    const cleanUp = () => {
+      current = false;
+      geometry.dispose();
+      material.dispose();
+    };
     requestAnimationFrame(render);
-  });
+    return cleanUp;
+  }, [drawValues]);
 
   return <canvas ref={canvasRef}></canvas>;
 };
