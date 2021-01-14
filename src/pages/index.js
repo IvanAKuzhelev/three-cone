@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useState } from "react";
 import { Global, css } from "@emotion/react";
+import { Helmet } from "react-helmet";
 import Canvas from "../components/canvas";
 import Form from "../components/Form";
 import DrawValuesContext from "../components/DrawValuesContext";
@@ -10,6 +11,10 @@ export default () => {
   const values = useState(InitialDrawValues);
   return (
     <DrawValuesContext.Provider value={values}>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Box app</title>
+      </Helmet>
       <Global
         styles={css`
           *,

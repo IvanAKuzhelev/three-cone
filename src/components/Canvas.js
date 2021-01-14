@@ -3,11 +3,14 @@ import { useRef, useEffect, useContext } from "react";
 import * as THREE from "three";
 import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
 import DrawValuesContext from "./DrawValuesContext";
+import useWindowSize from "./useWindowSize";
 
 const Canvas = () => {
   const [drawValues] = useContext(DrawValuesContext);
   const canvasRef = useRef(null);
+
   //scene variables
+
   const renderer = useRef(null);
   const scene = useRef(null);
   const camera = useRef(null);
@@ -15,9 +18,10 @@ const Canvas = () => {
   const mesh = useRef(null);
   const controls = useRef(null);
   const geometry = useRef(null);
-  let current = true;
-  // implement another hook
-  const aspectRatio = (0.8 * window.innerWidth) / window.innerHeight;
+
+  const [winWidth, winHeight] = useWindowSize();
+  const aspectRatio = (0.8 * winWidth) / winHeight;
+
   //setup functions
 
   const rendererSetup = () => {
@@ -35,7 +39,12 @@ const Canvas = () => {
   };
 
   const cameraSetup = () => {
-    camera.current = new THREE.PerspectiveCamera(55, aspectRatio, 0.1, 4500);
+    camera.current = new THREE.PerspectiveCamera(
+      55,
+      (0.8 * window.innerWidth) / window.innerHeight,
+      0.1,
+      4500
+    );
     camera.current.position.set(900, 600, 300);
   };
 
@@ -78,14 +87,13 @@ const Canvas = () => {
   };
 
   const renderFunc = () => {
-    if (current) {
-      controls.current.update();
-      renderer.current.render(scene.current, camera.current);
-      requestAnimationFrame(renderFunc);
-    }
-    return;
+    controls.current.update();
+    renderer.current.render(scene.current, camera.current);
+    requestAnimationFrame(renderFunc);
   };
+
   //update functions
+
   const updateCameraOnItemChange = () => {
     camera.current.far =
       5 *
@@ -95,6 +103,7 @@ const Canvas = () => {
       drawValues.camera.y,
       drawValues.camera.z
     );
+
     camera.current.updateProjectionMatrix();
   };
 
@@ -112,13 +121,21 @@ const Canvas = () => {
     geometry.current.computeBoundingBox();
     geometry.current.computeBoundingSphere();
   };
+
+  const handleResize = () => {
+    renderer.current.setSize(0.8 * winWidth, winHeight);
+    camera.current.aspect = aspectRatio;
+    camera.current.updateProjectionMatrix();
+  };
+
   const resetControls = () => {
     controls.current.reset();
   };
+
   // setup;
 
   useEffect(() => {
-    //environment
+    //"scene"
     rendererSetup();
     cameraSetup();
     sceneSetup();
@@ -133,10 +150,16 @@ const Canvas = () => {
     requestAnimationFrame(renderFunc);
   }, []);
 
+  //update
+
   useEffect(() => {
+    handleResize();
+  }, [winWidth, winHeight]);
+
+  useEffect(() => {
+    resetControls();
     updateCameraOnItemChange();
     updateGeometry();
-    resetControls();
   }, [drawValues]);
 
   return <canvas ref={canvasRef}></canvas>;
