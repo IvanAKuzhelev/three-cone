@@ -22,6 +22,8 @@ const Canvas = () => {
   const [winWidth, winHeight] = useWindowSize();
   const aspectRatio = (0.8 * winWidth) / winHeight;
 
+  const live = useRef(null);
+
   //setup functions
 
   const rendererSetup = () => {
@@ -87,9 +89,12 @@ const Canvas = () => {
   };
 
   const renderFunc = () => {
-    controls.current.update();
-    renderer.current.render(scene.current, camera.current);
-    requestAnimationFrame(renderFunc);
+    if (live.current) {
+      controls.current.update();
+      renderer.current.render(scene.current, camera.current);
+      requestAnimationFrame(renderFunc);
+    }
+    return;
   };
 
   //update functions
@@ -132,6 +137,23 @@ const Canvas = () => {
     controls.current.reset();
   };
 
+  // on unmount
+
+  const cleanUp = () => {
+    live.current = false;
+
+    controls.current.dispose();
+
+    scene.current.remove(mesh.current);
+    mesh.current.material.dispose();
+    mesh.current.geometry.dispose();
+
+    material.current.dispose();
+    geometry.current.dispose();
+
+    renderer.current.dispose();
+  };
+
   // setup;
 
   useEffect(() => {
@@ -141,6 +163,7 @@ const Canvas = () => {
     sceneSetup();
     lightsSetup();
     controlsSetup();
+    live.current = true;
 
     //box
     geometrySetup();
@@ -148,6 +171,8 @@ const Canvas = () => {
     meshSetup();
 
     requestAnimationFrame(renderFunc);
+
+    return cleanUp;
   }, []);
 
   //update

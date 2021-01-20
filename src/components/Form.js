@@ -3,6 +3,7 @@ import { useState, useContext } from "react";
 import { css } from "@emotion/react";
 import DimensionInput from "./DimensionInput";
 import DrawValuesContext from "./DrawValuesContext";
+import { Link } from "gatsby";
 
 const Form = () => {
   const [height, setHeight] = useState(200);
@@ -51,8 +52,7 @@ const Form = () => {
         onSubmit={handleSubmission}
         css={css`
           padding-top: 20vh;
-          justify-content: space-around;
-          flex-direction: row;
+          text-align: center;
         `}
       >
         <DimensionInput
@@ -71,14 +71,16 @@ const Form = () => {
           setDimension={setLength}
         />
 
-        <button
-          type="submit"
+        <button type="submit">Calculate</button>
+        <Link
+          to="/about/"
           css={css`
-            margin-left: 70px;
+            display: block;
+            padding-top: 10px;
           `}
         >
-          Calculate
-        </button>
+          About
+        </Link>
       </form>
     </aside>
   );
