@@ -17,7 +17,7 @@ const Form = () => {
       y: Number(height),
       z: Number(length),
     };
-    const url = "https://ikwdd.online/calc/";
+    const url = "https://3d-box.azurewebsites.net/";
     const response = await fetch(url, {
       method: "POST",
       mode: "cors",

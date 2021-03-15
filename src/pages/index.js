@@ -2,7 +2,7 @@ import * as React from "react";
 import { useState } from "react";
 import { Global, css } from "@emotion/react";
 import { Helmet } from "react-helmet";
-import Canvas from "../components/canvas";
+import Canvas from "../components/Canvas";
 import Form from "../components/Form";
 import DrawValuesContext from "../components/DrawValuesContext";
 import InitialDrawValues from "../components/InitialDrawValues";
