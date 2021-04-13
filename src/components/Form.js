@@ -17,7 +17,7 @@ const Form = () => {
       y: Number(height),
       z: Number(length),
     };
-    const url = "https://3d-box.azurewebsites.net/";
+    const url = "https://iak-fs.xyz/3d-box/";
     const response = await fetch(url, {
       method: "POST",
       mode: "cors",
