@@ -16,6 +16,9 @@ const DimensionInput = (props) => {
         value={props.dimensionValue}
         placeholder={props.dimension}
         onChange={(e) => props.setDimension(e.target.value)}
+        css={css`
+          margin-left: 5px;
+        `}
       />
     </div>
   );

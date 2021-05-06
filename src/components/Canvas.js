@@ -1,9 +1,9 @@
 import * as React from "react";
 import { useRef, useLayoutEffect, useEffect, useContext } from "react";
+import { css } from "@emotion/react";
 import * as THREE from "three";
 import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
 import DrawValuesContext from "./DrawValuesContext";
-import useWindowSize from "./useWindowSize";
 
 const Canvas = () => {
   const [drawValues] = useContext(DrawValuesContext);
@@ -18,9 +18,6 @@ const Canvas = () => {
   const mesh = useRef(null);
   const controls = useRef(null);
   const geometry = useRef(null);
-
-  const [winWidth, winHeight] = useWindowSize();
-  const aspectRatio = (0.8 * winWidth) / winHeight;
 
   const live = useRef(null);
 
@@ -39,7 +36,11 @@ const Canvas = () => {
         });
         renderer.current.setClearColor(0xd3d3d3);
         renderer.current.setPixelRatio(window.devicePixelRatio);
-        renderer.current.setSize(0.8 * window.innerWidth, window.innerHeight);
+        renderer.current.setSize(
+          canvasRef.current.clientWidth,
+          canvasRef.current.clientHeight,
+          false
+        );
       };
 
       const sceneSetup = () => {
@@ -49,7 +50,7 @@ const Canvas = () => {
       const cameraSetup = () => {
         camera.current = new THREE.PerspectiveCamera(
           55,
-          (0.8 * window.innerWidth) / window.innerHeight,
+          canvasRef.current.clientWidth / canvasRef.current.clientHeight,
           0.1,
           4500
         );
@@ -145,19 +146,31 @@ const Canvas = () => {
     // so they are not needed as dependencies here
   );
 
-  //update
+  // //update
 
   useEffect(() => {
     //responsiveness
 
     const handleResize = () => {
-      renderer.current.setSize(0.8 * winWidth, winHeight);
-      camera.current.aspect = aspectRatio;
+      console.log(
+        canvasRef.current.clientWidth,
+        canvasRef.current.clientHeight,
+        renderer.current.domElement.clientHeight
+      );
+      renderer.current.setSize(
+        canvasRef.current.clientWidth,
+        canvasRef.current.clientHeight
+      );
+      camera.current.aspect =
+        canvasRef.current.clientWidth / canvasRef.current.clientHeight;
       camera.current.updateProjectionMatrix();
     };
 
+    window.addEventListener("resize", handleResize);
     handleResize();
-  }, [winWidth, winHeight]);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     //Box update
@@ -199,6 +212,18 @@ const Canvas = () => {
     updateGeometry();
   }, [drawValues]);
 
-  return <canvas ref={canvasRef}></canvas>;
+  return (
+    <canvas
+      ref={canvasRef}
+      css={css`
+        flex: 1 1 auto;
+        min-width: 0;
+        min-height: 100%;
+        max-height: 100vh;
+        background-color: violet;
+        overflow: hidden;
+      `}
+    ></canvas>
+  );
 };
 export default Canvas;

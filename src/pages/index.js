@@ -22,6 +22,7 @@ export default () => {
           *:after {
             box-sizing: border-box;
           }
+          html,
           body {
             margin: 0;
             padding: 0;
@@ -30,8 +31,8 @@ export default () => {
       />
       <main
         css={css`
-          display: grid;
-          grid-template-columns: 1fr 4fr;
+          display: flex;
+          flex-flow: row;
           width: 100vw;
           height: 100vh;
         `}
