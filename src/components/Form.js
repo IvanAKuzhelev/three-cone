@@ -1,10 +1,11 @@
 import * as React from "react";
 import { useState, useContext } from "react";
-import { css } from "@emotion/react";
-import { Link } from "gatsby";
+import { css, useTheme } from "@emotion/react";
 import DimensionInput from "./DimensionInput";
-import DrawValuesContext from "./DrawValuesContext";
+import DrawValuesContext from "./contexts/DrawValuesContext";
 import { errors, ErrorDisplay } from "./ErrorDisplay";
+import ThemeToggle from "./ThemeToggle";
+import StyledLink, { ExternalLink } from "./StyledLinks";
 
 const Form = () => {
   const [height, setHeight] = useState(200);
@@ -12,6 +13,7 @@ const Form = () => {
   const [length, setLength] = useState(150);
   const [error, setError] = useState(errors.none);
   const [, setDrawValues] = useContext(DrawValuesContext);
+  const theme = useTheme();
 
   const getDrawvalues = async () => {
     const clientDimensions = {
@@ -40,7 +42,6 @@ const Form = () => {
       return;
     }
     setError(errors.none);
-    console.log(error);
     getDrawvalues().then(
       (data) => setDrawValues(data),
       (err) => {
@@ -58,6 +59,8 @@ const Form = () => {
         align-content: center;
         grid-gap: 10px;
         justify-items: center;
+        background-color: ${theme.aside};
+        color: ${theme.text};
       `}
     >
       <form
@@ -85,14 +88,18 @@ const Form = () => {
         <button type="submit">Calculate</button>
         <ErrorDisplay error={error} />
       </form>
-      <Link
+      <StyledLink
         to="/about/"
         css={css`
           display: block;
         `}
       >
         About
-      </Link>
+      </StyledLink>
+      <ExternalLink href="https://github.com/IvanAKuzhelev/box-server-fe">
+        GitHub
+      </ExternalLink>
+      <ThemeToggle />
     </aside>
   );
 };

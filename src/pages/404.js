@@ -1,13 +1,19 @@
 import * as React from "react";
-import { Link } from "gatsby";
+import CenteredMain from "../components/CenteredMain";
+import StyledLink, { ExternalLink } from "../components/StyledLinks";
+import ThemeToggle from "../components/ThemeToggle";
 
-// markup
 const NotFoundPage = () => {
   return (
-    <>
+    <CenteredMain>
       <h1>404 Not Found</h1>
-      <Link to="/">Go home</Link>
-    </>
+      <h2>It's here alright</h2>
+      <StyledLink to="/">Go to the homepage</StyledLink>
+      <ExternalLink href="https://github.com/IvanAKuzhelev/box-server-fe">
+        GitHub
+      </ExternalLink>
+      <ThemeToggle />
+    </CenteredMain>
   );
 };
 

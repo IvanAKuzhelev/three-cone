@@ -1,12 +1,13 @@
 import * as React from "react";
 import { useRef, useLayoutEffect, useEffect, useContext } from "react";
-import { css } from "@emotion/react";
+import { css, useTheme } from "@emotion/react";
 import * as THREE from "three";
 import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
-import DrawValuesContext from "./DrawValuesContext";
+import DrawValuesContext from "./contexts/DrawValuesContext";
 
 const Canvas = () => {
   const [drawValues] = useContext(DrawValuesContext);
+  const theme = useTheme();
   const canvasRef = useRef(null);
 
   //scene variables
@@ -19,6 +20,7 @@ const Canvas = () => {
   const controls = useRef(null);
   const geometry = useRef(null);
 
+  const frameID = useRef(null);
   const live = useRef(null);
 
   // setup;
@@ -34,7 +36,7 @@ const Canvas = () => {
           canvas: canvasRef.current,
           antialias: true,
         });
-        renderer.current.setClearColor(0xd3d3d3);
+        renderer.current.setClearColor(theme.scene);
         renderer.current.setPixelRatio(window.devicePixelRatio);
         renderer.current.setSize(
           canvasRef.current.clientWidth,
@@ -84,7 +86,7 @@ const Canvas = () => {
 
       const materialSetup = () => {
         material.current = new THREE.MeshPhongMaterial({
-          color: 0xff0000,
+          color: theme.box,
           flatShading: true,
         });
       };
@@ -96,18 +98,15 @@ const Canvas = () => {
       };
 
       const renderFunc = () => {
-        if (live.current) {
-          controls.current.update();
-          renderer.current.render(scene.current, camera.current);
-          requestAnimationFrame(renderFunc);
-        }
-        return;
+        controls.current.update();
+        renderer.current.render(scene.current, camera.current);
+        frameID.current = requestAnimationFrame(renderFunc);
       };
 
       // on unmount
 
       const cleanUp = () => {
-        live.current = false;
+        cancelAnimationFrame(frameID.current);
 
         controls.current.dispose();
 
@@ -141,22 +140,17 @@ const Canvas = () => {
       return cleanUp;
     },
     []
-    // update based on drawValues.indices and drawValues.vertices
-    // is handled in a different useEffect,
+    // updates based on drawValues.indices and drawValues.vertices
+    // and theme are handled in the dedicated useEffects,
     // so they are not needed as dependencies here
   );
 
-  // //update
+  //update
+
+  //responsiveness
 
   useEffect(() => {
-    //responsiveness
-
     const handleResize = () => {
-      console.log(
-        canvasRef.current.clientWidth,
-        canvasRef.current.clientHeight,
-        renderer.current.domElement.clientHeight
-      );
       renderer.current.setSize(
         canvasRef.current.clientWidth,
         canvasRef.current.clientHeight
@@ -172,9 +166,9 @@ const Canvas = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  useEffect(() => {
-    //Box update
+  //Box update
 
+  useEffect(() => {
     const resetControls = () => {
       controls.current.reset();
     };
@@ -211,6 +205,12 @@ const Canvas = () => {
     updateCameraOnItemChange();
     updateGeometry();
   }, [drawValues]);
+
+  //theme update
+  useEffect(() => {
+    renderer.current.setClearColor(theme.scene);
+    material.current.setValues({ color: theme.box });
+  }, [theme.box, theme.scene]);
 
   return (
     <canvas

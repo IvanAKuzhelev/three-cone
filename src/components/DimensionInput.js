@@ -1,6 +1,8 @@
 import * as React from "react";
-import { css } from "@emotion/react";
+import { css, useTheme } from "@emotion/react";
+
 const DimensionInput = (props) => {
+  const theme = useTheme();
   return (
     <div
       css={css`
@@ -18,6 +20,7 @@ const DimensionInput = (props) => {
         onChange={(e) => props.setDimension(e.target.value)}
         css={css`
           margin-left: 5px;
+          color: ${theme.inputText};
         `}
       />
     </div>
