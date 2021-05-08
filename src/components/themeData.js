@@ -2,9 +2,21 @@ const THEME_NAMES = {
   local: "theme",
   light: "light",
   dark: "dark",
+  default: "default",
 };
 const THEMES = {
   light: {
+    box: 0xff0000,
+    scene: 0xd3d3d3,
+    text: "#011627",
+    aside: "#fbfbfb",
+    inputText: "#011627",
+    toggleBg: "#87ceeb",
+    toggleBorder: "#fffd74",
+    link: "#1a0dab",
+    visitedLink: "#551a8b",
+  },
+  default: {
     box: 0xff0000,
     scene: 0xd3d3d3,
     text: "#011627",

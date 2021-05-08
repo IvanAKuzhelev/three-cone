@@ -1,13 +1,23 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useLayoutEffect } from "react";
 import { Global, ThemeProvider, css } from "@emotion/react";
 import { Helmet } from "react-helmet";
 import ActiveThemeContext from "./contexts/ActiveThemeContext";
-import { THEMES } from "./themeData";
+import { THEMES, THEME_NAMES } from "./themeData";
 import checkUserPreferredTheme from "./checkUserPreferredTheme";
 
 const RootWrapper = ({ children }) => {
-  const themeChoice = useState(checkUserPreferredTheme());
+  const themeChoice = useState(THEME_NAMES.default);
+
+  useLayoutEffect(() => {
+    // Updating to the actual theme
+
+    // This, along with the default theme, is a fix to the Gatsby hydration issue.
+    // In-depth discussions available here https://blog.logrocket.com/fixing-gatsbys-rehydration-issue/
+    // and here https://github.com/gatsbyjs/gatsby/discussions/17914
+
+    themeChoice[1](checkUserPreferredTheme());
+  }, []);
 
   return (
     <ActiveThemeContext.Provider value={themeChoice}>

@@ -220,7 +220,7 @@ const Canvas = () => {
         min-width: 0;
         min-height: 100%;
         max-height: 100vh;
-        background-color: violet;
+        background-color: lightgray;
         overflow: hidden;
       `}
     ></canvas>
