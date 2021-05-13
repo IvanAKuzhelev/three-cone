@@ -4,9 +4,10 @@ import { css } from "@emotion/react";
 import Canvas from "../components/Canvas";
 import Form from "../components/Form";
 import DrawValuesContext from "../components/contexts/DrawValuesContext";
-import InitialDrawValues from "../components/InitialDrawValues";
+// import InitialDrawValues from "../components/InitialDrawValues";
+import InitialDrawValues from "../components/ConeValues";
 
-export default () => {
+const Index = () => {
   const values = useState(InitialDrawValues);
   return (
     <DrawValuesContext.Provider value={values}>
@@ -24,3 +25,4 @@ export default () => {
     </DrawValuesContext.Provider>
   );
 };
+export default Index;
