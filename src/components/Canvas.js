@@ -4,6 +4,7 @@ import { css, useTheme } from "@emotion/react";
 import * as THREE from "three";
 import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
 import DrawValuesContext from "./contexts/DrawValuesContext";
+import { VertexNormalsHelper } from "three/examples/jsm/helpers/VertexNormalsHelper";
 
 const Canvas = () => {
   const [drawValues] = useContext(DrawValuesContext);
@@ -47,6 +48,8 @@ const Canvas = () => {
 
       const sceneSetup = () => {
         scene.current = new THREE.Scene();
+        const axesHelper = new THREE.AxesHelper(400);
+        scene.current.add(axesHelper);
       };
 
       const cameraSetup = () => {
@@ -81,13 +84,19 @@ const Canvas = () => {
           "position",
           new THREE.BufferAttribute(new Float32Array(drawValues.vertices), 3)
         );
+        geometry.current.deleteAttribute("normal");
+        geometry.current.setAttribute(
+          "normal",
+          new THREE.BufferAttribute(new Float32Array(drawValues.normals), 3)
+        );
+        console.log(drawValues.normals);
         geometry.current.setIndex(drawValues.indices);
       };
 
       const materialSetup = () => {
         material.current = new THREE.MeshPhongMaterial({
           color: theme.box,
-          flatShading: true,
+          flatShading: false,
         });
       };
 
@@ -95,6 +104,9 @@ const Canvas = () => {
         mesh.current = new THREE.Mesh(geometry.current, material.current);
         mesh.current.position.set(0, 0, 0);
         scene.current.add(mesh.current);
+        const helper = new VertexNormalsHelper(mesh.current, 50, 0x00ff00, 1);
+
+        scene.current.add(helper);
       };
 
       const renderFunc = () => {
@@ -168,43 +180,43 @@ const Canvas = () => {
 
   //Box update
 
-  useEffect(() => {
-    const resetControls = () => {
-      controls.current.reset();
-    };
+  // useEffect(() => {
+  //   const resetControls = () => {
+  //     controls.current.reset();
+  //   };
 
-    const updateCameraOnItemChange = () => {
-      camera.current.far =
-        5 *
-        Math.max(drawValues.camera.x, drawValues.camera.y, drawValues.camera.z);
-      camera.current.position.set(
-        drawValues.camera.x,
-        drawValues.camera.y,
-        drawValues.camera.z
-      );
+  //   const updateCameraOnItemChange = () => {
+  //     camera.current.far =
+  //       5 *
+  //       Math.max(drawValues.camera.x, drawValues.camera.y, drawValues.camera.z);
+  //     camera.current.position.set(
+  //       drawValues.camera.x,
+  //       drawValues.camera.y,
+  //       drawValues.camera.z
+  //     );
 
-      camera.current.updateProjectionMatrix();
-    };
+  //     camera.current.updateProjectionMatrix();
+  //   };
 
-    const updateGeometry = () => {
-      const newValues = new Float32Array(drawValues.vertices);
-      for (let i = 1, j = 0; j < 8; i += 3, j++) {
-        geometry.current.attributes.position.setXYZ(
-          j,
-          newValues[i - 1],
-          newValues[i],
-          newValues[i + 1]
-        );
-      }
-      geometry.current.attributes.position.needsUpdate = true;
-      geometry.current.computeBoundingBox();
-      geometry.current.computeBoundingSphere();
-    };
+  //   const updateGeometry = () => {
+  //     const newValues = new Float32Array(drawValues.vertices);
+  //     for (let i = 1, j = 0; j < 8; i += 3, j++) {
+  //       geometry.current.attributes.position.setXYZ(
+  //         j,
+  //         newValues[i - 1],
+  //         newValues[i],
+  //         newValues[i + 1]
+  //       );
+  //     }
+  //     geometry.current.attributes.position.needsUpdate = true;
+  //     geometry.current.computeBoundingBox();
+  //     geometry.current.computeBoundingSphere();
+  //   };
 
-    resetControls();
-    updateCameraOnItemChange();
-    updateGeometry();
-  }, [drawValues]);
+  //   resetControls();
+  //   updateCameraOnItemChange();
+  //   updateGeometry();
+  // }, [drawValues]);
 
   //theme update
   useEffect(() => {
