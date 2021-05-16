@@ -2,9 +2,9 @@ import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 import * as React from "react";
 import { useContext } from "react";
-import ActiveThemeContext from "./contexts/ActiveThemeContext";
-import Moon from "../images/moon.svg";
-import Sun from "../images/sun.svg";
+import ActiveThemeContext from "../contexts/ActiveThemeContext";
+import Moon from "../../images/moon.svg";
+import Sun from "../../images/sun.svg";
 
 import { THEME_NAMES } from "./themeData";
 

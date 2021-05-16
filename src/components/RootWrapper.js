@@ -3,8 +3,8 @@ import { useState, useLayoutEffect } from "react";
 import { Global, ThemeProvider, css } from "@emotion/react";
 import { Helmet } from "react-helmet";
 import ActiveThemeContext from "./contexts/ActiveThemeContext";
-import { THEMES, THEME_NAMES } from "./themeData";
-import checkUserPreferredTheme from "./checkUserPreferredTheme";
+import { THEMES, THEME_NAMES } from "./themingAndStyling/themeData";
+import checkUserPreferredTheme from "./themingAndStyling/checkUserPreferredTheme";
 
 const RootWrapper = ({ children }) => {
   const themeChoice = useState(THEME_NAMES.default);

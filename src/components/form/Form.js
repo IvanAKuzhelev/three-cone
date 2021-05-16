@@ -2,10 +2,10 @@ import * as React from "react";
 import { useState, useContext } from "react";
 import { css, useTheme } from "@emotion/react";
 import DimensionInput from "./DimensionInput";
-import DrawValuesContext from "./contexts/DrawValuesContext";
+import DrawValuesContext from "../contexts/DrawValuesContext";
 import { errors, ErrorDisplay } from "./ErrorDisplay";
-import ThemeToggle from "./ThemeToggle";
-import StyledLink, { ExternalLink } from "./StyledLinks";
+import ThemeToggle from "../themingAndStyling/ThemeToggle";
+import StyledLink, { ExternalLink } from "../themingAndStyling/StyledLinks";
 
 const Form = () => {
   const [height, setHeight] = useState(200);

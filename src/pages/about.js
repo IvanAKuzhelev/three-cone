@@ -1,7 +1,9 @@
 import * as React from "react";
-import CenteredMain from "../components/CenteredMain";
-import StyledLink, { ExternalLink } from "../components/StyledLinks";
-import ThemeToggle from "../components/ThemeToggle";
+import CenteredMain from "../components/themingAndStyling/CenteredMain";
+import StyledLink, {
+  ExternalLink,
+} from "../components/themingAndStyling/StyledLinks";
+import ThemeToggle from "../components/themingAndStyling/ThemeToggle";
 
 const about = () => {
   return (

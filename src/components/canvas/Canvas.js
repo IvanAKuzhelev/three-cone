@@ -3,7 +3,7 @@ import { useRef, useLayoutEffect, useEffect, useContext } from "react";
 import { css, useTheme } from "@emotion/react";
 import * as THREE from "three";
 import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
-import DrawValuesContext from "./contexts/DrawValuesContext";
+import DrawValuesContext from "../contexts/DrawValuesContext";
 import { VertexNormalsHelper } from "three/examples/jsm/helpers/VertexNormalsHelper";
 
 const Canvas = () => {

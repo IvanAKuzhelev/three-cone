@@ -1,11 +1,10 @@
 import * as React from "react";
 import { useState } from "react";
 import { css } from "@emotion/react";
-import Canvas from "../components/Canvas";
-import Form from "../components/Form";
+import Canvas from "../components/canvas/Canvas";
+import Form from "../components/form/Form";
 import DrawValuesContext from "../components/contexts/DrawValuesContext";
-// import InitialDrawValues from "../components/InitialDrawValues";
-import InitialDrawValues from "../components/ConeValues";
+import InitialDrawValues from "../components/canvas/canvasUtils/InitialDrawValues";
 
 const Index = () => {
   const values = useState(InitialDrawValues);
