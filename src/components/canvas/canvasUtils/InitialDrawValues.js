@@ -35,9 +35,10 @@ const CalculateDrawValues = (N, H, R) => {
     indices: indices,
     normals: normals,
     camera: {
-      x: 900,
-      y: 600,
-      z: 300,
+      x: -5 * R,
+      y: -7 * R,
+      z: 0.85 * H,
+      far: 900 * Math.max(H, R),
     },
   };
 };

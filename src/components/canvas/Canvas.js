@@ -1,10 +1,22 @@
 import * as React from "react";
 import { useRef, useLayoutEffect, useEffect, useContext } from "react";
 import { css, useTheme } from "@emotion/react";
-import * as THREE from "three";
-import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
 import DrawValuesContext from "../contexts/DrawValuesContext";
-import { VertexNormalsHelper } from "three/examples/jsm/helpers/VertexNormalsHelper";
+import {
+  rendererSetup,
+  sceneSetup,
+  cameraSetup,
+  controlsSetup,
+  lightsSetup,
+  geometrySetup,
+  materialSetup,
+  meshSetup,
+} from "./canvasUtils/setupFunctions";
+import {
+  resetControls,
+  updateGeometry,
+  updateCameraOnItemChange,
+} from "./canvasUtils/updateFunctions";
 
 const Canvas = () => {
   const [drawValues] = useContext(DrawValuesContext);
@@ -22,140 +34,56 @@ const Canvas = () => {
   const geometry = useRef(null);
 
   const frameID = useRef(null);
-  const live = useRef(null);
 
   // setup;
 
   useLayoutEffect(
     () => {
-      //setup
-
-      //setup functions
-
-      const rendererSetup = () => {
-        renderer.current = new THREE.WebGLRenderer({
-          canvas: canvasRef.current,
-          antialias: true,
-        });
-        renderer.current.setClearColor(theme.scene);
-        renderer.current.setPixelRatio(window.devicePixelRatio);
-        renderer.current.setSize(
-          canvasRef.current.clientWidth,
-          canvasRef.current.clientHeight,
-          false
-        );
-      };
-
-      const sceneSetup = () => {
-        scene.current = new THREE.Scene();
-        const axesHelper = new THREE.AxesHelper(400);
-        scene.current.add(axesHelper);
-      };
-
-      const cameraSetup = () => {
-        camera.current = new THREE.PerspectiveCamera(
-          55,
-          canvasRef.current.clientWidth / canvasRef.current.clientHeight,
-          0.1,
-          4500
-        );
-        camera.current.position.set(900, 600, 300);
-      };
-
-      const controlsSetup = () => {
-        controls.current = new TrackballControls(
-          camera.current,
-          renderer.current.domElement
-        );
-        controls.current.keys = [65, 83, 68];
-      };
-
-      const lightsSetup = () => {
-        const light = new THREE.AmbientLight(0xffffff, 0.2);
-        const light3 = new THREE.PointLight(0xffffff, 0.8);
-        scene.current.add(light);
-        camera.current.add(light3);
-        scene.current.add(camera.current);
-      };
-
-      const geometrySetup = () => {
-        geometry.current = new THREE.BufferGeometry();
-        geometry.current.setAttribute(
-          "position",
-          new THREE.BufferAttribute(new Float32Array(drawValues.vertices), 3)
-        );
-        geometry.current.deleteAttribute("normal");
-        geometry.current.setAttribute(
-          "normal",
-          new THREE.BufferAttribute(new Float32Array(drawValues.normals), 3)
-        );
-        console.log(drawValues.normals);
-        geometry.current.setIndex(drawValues.indices);
-      };
-
-      const materialSetup = () => {
-        material.current = new THREE.MeshPhongMaterial({
-          color: theme.box,
-          flatShading: false,
-        });
-      };
-
-      const meshSetup = () => {
-        mesh.current = new THREE.Mesh(geometry.current, material.current);
-        mesh.current.position.set(0, 0, 0);
-        scene.current.add(mesh.current);
-        const helper = new VertexNormalsHelper(mesh.current, 50, 0x00ff00, 1);
-
-        scene.current.add(helper);
-      };
-
-      const renderFunc = () => {
-        controls.current.update();
-        renderer.current.render(scene.current, camera.current);
-        frameID.current = requestAnimationFrame(renderFunc);
-      };
-
-      // on unmount
-
-      const cleanUp = () => {
-        cancelAnimationFrame(frameID.current);
-
-        controls.current.dispose();
-
-        scene.current.remove(mesh.current);
-        mesh.current.material.dispose();
-        mesh.current.geometry.dispose();
-
-        material.current.dispose();
-        geometry.current.dispose();
-
-        renderer.current.dispose();
-      };
-
       //"scene"
-      rendererSetup();
-      cameraSetup();
-      sceneSetup();
-      lightsSetup();
-      controlsSetup();
-      live.current = true;
+      rendererSetup(renderer, canvasRef, theme.scene);
+      sceneSetup(scene);
+      cameraSetup(camera, canvasRef, scene);
+      lightsSetup(scene, camera);
+      controlsSetup(controls, camera, renderer);
 
       //box
-      geometrySetup();
-      materialSetup();
-      meshSetup();
-
-      //rendering
-
-      requestAnimationFrame(renderFunc);
-
-      return cleanUp;
+      geometrySetup(geometry, drawValues);
+      materialSetup(material, theme);
+      meshSetup(mesh, geometry, material, scene);
     },
     []
-    // updates based on drawValues.indices and drawValues.vertices
-    // and theme are handled in the dedicated useEffects,
-    // so they are not needed as dependencies here
+    // updates are handled in the dedicated useEffects,
+    // so drawValues and theme are not needed as dependencies here
   );
+
+  useLayoutEffect(() => {
+    const renderFunc = () => {
+      controls.current.update();
+      renderer.current.render(scene.current, camera.current);
+      frameID.current = requestAnimationFrame(renderFunc);
+    };
+
+    const cleanUp = () => {
+      cancelAnimationFrame(frameID.current);
+
+      controls.current.dispose();
+
+      scene.current.remove(mesh.current);
+      mesh.current.material.dispose();
+      mesh.current.geometry.dispose();
+
+      material.current.dispose();
+      geometry.current.dispose();
+
+      renderer.current.dispose();
+    };
+
+    //starting render loop
+    requestAnimationFrame(renderFunc);
+
+    //cleanup on unmount
+    return cleanUp;
+  }, []);
 
   //update
 
@@ -172,57 +100,26 @@ const Canvas = () => {
       camera.current.updateProjectionMatrix();
     };
 
-    window.addEventListener("resize", handleResize);
     handleResize();
+
+    window.addEventListener("resize", handleResize);
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  //Box update
+  //Figure update
 
-  // useEffect(() => {
-  //   const resetControls = () => {
-  //     controls.current.reset();
-  //   };
-
-  //   const updateCameraOnItemChange = () => {
-  //     camera.current.far =
-  //       5 *
-  //       Math.max(drawValues.camera.x, drawValues.camera.y, drawValues.camera.z);
-  //     camera.current.position.set(
-  //       drawValues.camera.x,
-  //       drawValues.camera.y,
-  //       drawValues.camera.z
-  //     );
-
-  //     camera.current.updateProjectionMatrix();
-  //   };
-
-  //   const updateGeometry = () => {
-  //     const newValues = new Float32Array(drawValues.vertices);
-  //     for (let i = 1, j = 0; j < 8; i += 3, j++) {
-  //       geometry.current.attributes.position.setXYZ(
-  //         j,
-  //         newValues[i - 1],
-  //         newValues[i],
-  //         newValues[i + 1]
-  //       );
-  //     }
-  //     geometry.current.attributes.position.needsUpdate = true;
-  //     geometry.current.computeBoundingBox();
-  //     geometry.current.computeBoundingSphere();
-  //   };
-
-  //   resetControls();
-  //   updateCameraOnItemChange();
-  //   updateGeometry();
-  // }, [drawValues]);
+  useEffect(() => {
+    resetControls(controls);
+    updateCameraOnItemChange(camera, drawValues);
+    updateGeometry(geometry, drawValues);
+  }, [drawValues]);
 
   //theme update
   useEffect(() => {
     renderer.current.setClearColor(theme.scene);
-    material.current.setValues({ color: theme.box });
-  }, [theme.box, theme.scene]);
+    material.current.setValues({ color: theme.figure });
+  }, [theme.figure, theme.scene]);
 
   return (
     <canvas

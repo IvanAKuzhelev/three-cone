@@ -6,7 +6,7 @@ const THEME_NAMES = {
 };
 const THEMES = {
   light: {
-    box: 0xff0000,
+    figure: 0xff0000,
     scene: 0xd3d3d3,
     text: "#011627",
     aside: "#fbfbfb",
@@ -17,7 +17,7 @@ const THEMES = {
     visitedLink: "#551a8b",
   },
   default: {
-    box: 0xff0000,
+    figure: 0xff0000,
     scene: 0xd3d3d3,
     text: "#011627",
     aside: "#fbfbfb",
@@ -28,7 +28,7 @@ const THEMES = {
     visitedLink: "#551a8b",
   },
   dark: {
-    box: 0xfbfbfb,
+    figure: 0xfbfbfb,
     scene: 0x011627,
     text: "#fbfbfb",
     aside: "#010b12",
