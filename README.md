@@ -1,8 +1,8 @@
 # Cone app (Gatsby frontend).
-*Three.js as the WebGl library(BufferGeometry)
-*React Context for the state management
-*Emotion.js for CSS
-*Dark mode utilizing local storage and OS preference
+* Three.js as the WebGl library(BufferGeometry)
+* React Context for the state management
+* Emotion.js for CSS
+* Dark mode utilizing local storage and OS preference
 
 ## Updates implementation.
 Right now, each time a new triangulation is received completely new geometry(and mesh) is created. This is because a difference in the number of triangles leads to a difference in the needed elements in the buffer array.
