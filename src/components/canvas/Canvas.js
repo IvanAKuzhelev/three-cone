@@ -24,7 +24,7 @@ const Canvas = () => {
   const theme = useTheme();
   const canvasRef = useRef(null);
 
-  //scene variables
+  // scene variables
 
   const renderer = useRef(null);
   const scene = useRef(null);
@@ -40,14 +40,14 @@ const Canvas = () => {
 
   useLayoutEffect(
     () => {
-      //"scene"
+      // scene
       rendererSetup(renderer, canvasRef, theme.scene);
       sceneSetup(scene);
       cameraSetup(camera, canvasRef, scene);
       lightsSetup(scene, camera);
       controlsSetup(controls, camera, renderer);
 
-      //box
+      // figure
       geometrySetup(geometry, drawValues);
       materialSetup(material, theme);
       meshSetup(mesh, geometry, material, scene);
@@ -79,16 +79,16 @@ const Canvas = () => {
       renderer.current.dispose();
     };
 
-    //starting render loop
+    // starting render loop
     requestAnimationFrame(renderFunc);
 
-    //cleanup on unmount
+    // cleanup on unmount
     return cleanUp;
   }, []);
 
-  //update
+  // update
 
-  //responsiveness
+  // responsiveness
 
   useEffect(() => {
     const handleResize = () => {
@@ -108,15 +108,15 @@ const Canvas = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  //Figure update
+  // Figure update
 
   useEffect(() => {
     resetControls(controls);
     updateGeometry(mesh, geometry, material, scene, drawValues);
     updateCameraOnItemChange(camera, drawValues);
-  }, [drawValues.indices, drawValues.vertices]);
+  }, [drawValues]);
 
-  //theme update
+  // theme update
   useEffect(() => {
     updateColorsBasedOnTheme(renderer, material, theme);
   }, [theme]);

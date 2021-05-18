@@ -24,7 +24,7 @@ const RootWrapper = ({ children }) => {
       <ThemeProvider theme={THEMES[themeChoice[0]]}>
         <Helmet>
           <meta charSet="utf-8" />
-          <title>Box app</title>
+          <title>Cone app</title>
         </Helmet>
         <Global
           styles={css`

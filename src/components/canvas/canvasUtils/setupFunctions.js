@@ -39,10 +39,10 @@ const controlsSetup = (controls, camera, renderer) => {
 
 const lightsSetup = (scene, camera) => {
   const light = new THREE.AmbientLight(0xffffff, 0.6);
-  const light3 = new THREE.SpotLight(0xffffff, 0.25);
+  const light2 = new THREE.SpotLight(0xffffff, 0.25);
 
   scene.current.add(light);
-  camera.current.add(light3);
+  camera.current.add(light2);
 };
 
 const geometrySetup = (geometry, drawValues) => {
