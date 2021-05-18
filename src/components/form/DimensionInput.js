@@ -7,7 +7,9 @@ const DimensionInput = (props) => {
     <div
       css={css`
         display: flex;
-        justify-content: space-between;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
         padding: 10px;
       `}
     >
@@ -19,7 +21,7 @@ const DimensionInput = (props) => {
         placeholder={props.dimension}
         onChange={(e) => props.setDimension(e.target.value)}
         css={css`
-          margin-left: 5px;
+          margin-top: 5px;
           color: ${theme.inputText};
         `}
       />

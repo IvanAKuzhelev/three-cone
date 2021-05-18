@@ -10,6 +10,7 @@ const errors = {
 const ErrorDisplay = ({ error }) => {
   const Display = styled.p`
     color: red;
+    max-width: 200px;
   `;
   switch (error) {
     case errors.none:

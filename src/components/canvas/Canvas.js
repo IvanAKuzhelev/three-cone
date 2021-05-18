@@ -16,6 +16,7 @@ import {
   resetControls,
   updateGeometry,
   updateCameraOnItemChange,
+  updateColorsBasedOnTheme,
 } from "./canvasUtils/updateFunctions";
 
 const Canvas = () => {
@@ -111,15 +112,14 @@ const Canvas = () => {
 
   useEffect(() => {
     resetControls(controls);
+    updateGeometry(mesh, geometry, material, scene, drawValues);
     updateCameraOnItemChange(camera, drawValues);
-    updateGeometry(geometry, drawValues);
-  }, [drawValues]);
+  }, [drawValues.indices, drawValues.vertices]);
 
   //theme update
   useEffect(() => {
-    renderer.current.setClearColor(theme.scene);
-    material.current.setValues({ color: theme.figure });
-  }, [theme.figure, theme.scene]);
+    updateColorsBasedOnTheme(renderer, material, theme);
+  }, [theme]);
 
   return (
     <canvas

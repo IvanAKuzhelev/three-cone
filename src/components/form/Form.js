@@ -8,20 +8,20 @@ import ThemeToggle from "../themingAndStyling/ThemeToggle";
 import StyledLink, { ExternalLink } from "../themingAndStyling/StyledLinks";
 
 const Form = () => {
-  const [height, setHeight] = useState(200);
-  const [width, setWidth] = useState(100);
-  const [length, setLength] = useState(150);
+  const [H, setH] = useState(300);
+  const [R, setR] = useState(100);
+  const [N, setN] = useState(20);
   const [error, setError] = useState(errors.none);
   const [, setDrawValues] = useContext(DrawValuesContext);
   const theme = useTheme();
 
   const getDrawvalues = async () => {
     const clientDimensions = {
-      x: Number(width),
-      y: Number(height),
-      z: Number(length),
+      H: H,
+      R: R,
+      N: N,
     };
-    const url = "https://iak-fs.xyz/3d-box/";
+    const url = "https://iak-fs.xyz/cone/";
     const response = await fetch(url, {
       method: "POST",
       mode: "cors",
@@ -37,7 +37,7 @@ const Form = () => {
 
   const handleSubmission = (e) => {
     e.preventDefault();
-    if (height === "" || width === "" || length === "") {
+    if (H === "" || R === "" || N === "" || N < 4) {
       setError(errors.input);
       return;
     }
@@ -71,18 +71,18 @@ const Form = () => {
       >
         <DimensionInput
           dimension="Height"
-          dimensionValue={height}
-          setDimension={setHeight}
+          dimensionValue={H}
+          setDimension={setH}
         />
         <DimensionInput
-          dimension="Width"
-          dimensionValue={width}
-          setDimension={setWidth}
+          dimension="Radius"
+          dimensionValue={R}
+          setDimension={setR}
         />
         <DimensionInput
-          dimension="Length"
-          dimensionValue={length}
-          setDimension={setLength}
+          dimension="Number of triangles"
+          dimensionValue={N}
+          setDimension={setN}
         />
 
         <button type="submit">Calculate</button>
