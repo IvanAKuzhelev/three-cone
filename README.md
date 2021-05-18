@@ -4,6 +4,9 @@
 * Emotion.js for CSS
 * Dark mode utilizing local storage and OS preference
 
+## AdBlock
+Apparently, a new version of AdBlock doesn't like either my server domain or the used type of cross-site requests in general (probably the former), so, please, whitelist to let the app work.
+
 ## Updates implementation.
 Right now, each time a new triangulation is received completely new geometry(and mesh) is created. This is because a difference in the number of triangles leads to a difference in the needed elements in the buffer array.
 
