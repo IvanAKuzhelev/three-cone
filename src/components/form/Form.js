@@ -21,7 +21,7 @@ const Form = () => {
       R: R,
       N: N,
     };
-    const url = "https://iak-fs.xyz/cone/";
+    const url = "/.netlify/functions/calculateDrawValues";
     const response = await fetch(url, {
       method: "POST",
       mode: "cors",
